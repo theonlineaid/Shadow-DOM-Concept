@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encapsulation Example</title>
+</head>
+<body>
+  <div class="container">
+    <my-button></my-button>
+  </div>
+
+  <div id="host-element"></div>
+
+  <script>
+    // Select the host element
+    const hostElement = document.getElementById('host-element');
+
+    // Create a shadow root
+    const shadowRoot = hostElement.attachShadow({ mode: 'open' });
+
+    // Create an element inside the shadow root
+    const paragraph = document.createElement('p');
+    paragraph.textContent = 'This is a paragraph inside the shadow DOM.';
+
+    // Add some styles to the paragraph
+    paragraph.style.color = 'blue';
+    paragraph.style.fontFamily = 'Arial';
+
+    // Append the paragraph to the shadow root
+    shadowRoot.appendChild(paragraph);
+
+    // Function to trigger text change
+    function triggerTextChange() {
+      // Access the paragraph element inside the shadow DOM
+      const paragraphInShadowDOM = shadowRoot.querySelector('p');
+
+      // Modify the text content
+      paragraphInShadowDOM.textContent = 'Text has been changed!';
+    }
+
+    // Trigger text change after 3 seconds (for demonstration)
+    setTimeout(triggerTextChange, 3000);
+
+    function handleClick() {
+      // Access the paragraph element inside the shadow DOM
+      const paragraphInShadowDOM = shadowRoot.querySelector('p');
+
+      // Modify the text content
+      paragraphInShadowDOM.textContent = 'Text has been changed again!';
+    }
+
+    // Add click event listener to the host element
+    hostElement.addEventListener('click', handleClick);
+  </script>
+
+
+  <p is="my-customized-built-in-element">This is a customized paragraph element.</p>
+
+  <script>
+    // Define the class for the customized built-in element
+    class MyCustomizedBuiltInElement extends HTMLParagraphElement {
+      constructor() {
+        super();
+        // Add custom behavior or styling here if needed
+        this.style.color = 'blue'; // Example: Change text color to blue
+        this.addEventListener('click', () => {
+          alert('Customized built-in element clicked!');
+        });
+      }
+    }
+
+    // Define the custom element using customElements.define()
+    customElements.define(
+      "my-customized-built-in-element",
+      MyCustomizedBuiltInElement,
+      { extends: "p" }
+    );
+  </script>
+
+
+
+  <script>
+    // Define the custom button element with Shadow DOM
+    customElements.define('my-button', class extends HTMLElement {
+      constructor() {
+        super();
+        // Create a shadow root
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+
+        // Define styles within Shadow DOM
+        shadowRoot.innerHTML = `
+          <style>
+            /* Styles inside Shadow DOM */
+            button {
+              padding: 10px 20px;
+              background-color: #007bff;
+              color: #ffffff;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            }
+          </style>
+          <button>Click Me</button>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
